@@ -14,9 +14,14 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/sequelize": "^4.28.20",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7"
   }
 }
