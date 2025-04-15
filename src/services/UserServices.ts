@@ -10,6 +10,11 @@ export default class UserService {
         return User.create({ email, hash });
     }
 
+    static getByEmail(email) {
+        return User.findOne({where: {email}});
+
+    }
+
     static tokenize(user: User) {
         const payload = user.get({ plain: true }); 
         delete payload.hash;

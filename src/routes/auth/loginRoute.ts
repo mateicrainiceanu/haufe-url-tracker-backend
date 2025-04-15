@@ -1,8 +1,9 @@
 import express from "express";
+import UserController from "../../controllers/UserController";
 
 const router = express.Router()
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     const { email, password }: { email?: string, password?: string } = req.body || {};
 
     if (!email || !password) {
@@ -10,8 +11,13 @@ router.post("/login", (req, res) => {
         return;
     }
 
-    //TODO: Create user and respond with a 200 and token
-    res.status(200).send("Not implemented");
+    try {
+        const {user, token} = await UserController.authenticateUser(email, password);
+        res.status(200).json({user, token});
+    } catch (_) {
+        res.status(400).send("Invalid credentials");
+    }
+
 })
 
 export default router;
