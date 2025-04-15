@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../../respositories/UserRepository";
+import UserController from "../../controllers/UserController";
 
 const router = express.Router()
 
@@ -11,12 +11,9 @@ router.post("/register", async (req, res) => {
         return;
     }
 
-    const user = await User.create({ email, hash: password });
-    console.log(user);
+    const {user, token} = await UserController.registerUser(email, password);
 
-
-    //TODO: Create user and respond with a 200 and token
-    res.status(200).send("Not implemented");
+    res.status(201).json({user, token});
 })
 
 export default router;

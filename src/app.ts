@@ -3,16 +3,17 @@ import express from 'express';
 import registerRoute from './routes/auth/registerRoute';
 import bodyParser from 'body-parser';
 import loginRoute from './routes/auth/loginRoute';
-import User from './respositories/UserRepository';
-import db from './config/sequelize';
+import User from './models/User';
+import db from './config/db';
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.get('/api/v1/', async (req, res) => {
+  const users = await User.findAll();
+  res.json(users)
 });
 
 app.use("/api/v1/", registerRoute, loginRoute);

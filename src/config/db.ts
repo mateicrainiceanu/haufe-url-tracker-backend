@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize"
-import User from "../respositories/UserRepository";
+import User from "../models/User";
 
 require("dotenv").config();
 
