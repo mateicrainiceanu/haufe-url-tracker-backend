@@ -1,11 +1,16 @@
 import { Sequelize } from "sequelize"
+import User from "../respositories/UserRepository";
 
-const sequelize = new Sequelize('postgres://mateicrainiceanu:postgres@localhost:5432/url-tracker');
+require("dotenv").config();
+
+const connectionUrl = process.env.POSTGRES_DB
+const db = new Sequelize(connectionUrl, { dialect: 'postgres', logging: false });
 
 testSequelize();
+
 async function testSequelize() {
     try {
-        await sequelize.authenticate();
+        await db.authenticate();
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
@@ -13,5 +18,5 @@ async function testSequelize() {
 
 }
 
-export {testSequelize};
-export default sequelize;
+export { testSequelize };
+export default db;

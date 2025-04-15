@@ -1,9 +1,9 @@
 import express from "express";
-import User from "../../models/User";
+import User from "../../respositories/UserRepository";
 
 const router = express.Router()
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
     const { email, password }: { email?: string, password?: string } = req.body || {};
 
     if (!email || !password) {
@@ -11,7 +11,9 @@ router.post("/register", (req, res) => {
         return;
     }
 
-    const user = new User();
+    const user = await User.create({ email, hash: password });
+    console.log(user);
+
 
     //TODO: Create user and respond with a 200 and token
     res.status(200).send("Not implemented");

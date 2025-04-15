@@ -1,7 +1,7 @@
-import {Sequelize, DataTypes} from "sequelize";
-import sequelize from "../config/sequelize";
+import {DataTypes} from "sequelize";
+import db from "../config/sequelize";
 
-const User = sequelize.define(
+const UserRepository = db.define(
     'User',
     {
         email: {
@@ -12,7 +12,10 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         }
+    }, 
+    {
+        timestamps: true
     }
 )
 
-export default User;
+export default UserRepository;
