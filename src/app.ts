@@ -5,13 +5,16 @@ import bodyParser from 'body-parser';
 import loginRoute from './routes/auth/loginRoute';
 import User from './models/User';
 import db from './config/db';
+import cors from 'cors'; 
+import auth from './utils/middleware/auth';
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use(cors());
 
-app.get('/api/v1/', async (req, res) => {
+app.get('/api/v1/', auth, async (req, res) => {
   const users = await User.findAll();
   res.json(users)
 });
