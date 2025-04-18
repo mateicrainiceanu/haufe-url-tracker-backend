@@ -1,17 +1,18 @@
 import { Request } from 'express';
 import { decode } from 'jsonwebtoken';
 import { AuthUser, decodeToken } from '../decodeToken';
+import logger from '../../config/logger';
 
 interface AuthenticatedRequest extends Request {
     headers: {
         authorization?: string;
-        [key: string]: any; 
+        [key: string]: any;
     };
     user: AuthUser;
     [key: string]: any;
 }
 
-export default function auth(req: AuthenticatedRequest, res, next) {
+export default async function auth(req: AuthenticatedRequest, res, next) {
     const token = req.get('authorization');
     if (!token) {
         res.status(401).send('User not authenticated');
@@ -26,9 +27,11 @@ export default function auth(req: AuthenticatedRequest, res, next) {
 
     try {
         req.user = decodeToken(bearerToken);
+        logger.info(`User [${req.user.id}] verified`);
         next();
     } catch (error) {
         res.status(401).send(error.message);
+        logger.error(`Error decoding token: ${error.message}`);
         return;
     }
 }

@@ -13,7 +13,6 @@ export function decodeToken(token: string): AuthUser {
     if (!decoded) {
         throw new Error('Invalid token: Request us unauthorized');
     }
-
-    console.log("Decoded token: ", decoded);
+    
     return decoded;
 }
