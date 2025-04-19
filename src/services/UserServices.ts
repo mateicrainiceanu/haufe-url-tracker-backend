@@ -20,4 +20,8 @@ export default class UserService {
         delete payload.hash;
         return jwt.sign(payload, jwtsecret);
     }
+
+    static getUsername(user: User) {
+        return user.email.split("@")[0];
+    }
 }

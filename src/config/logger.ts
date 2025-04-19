@@ -15,7 +15,7 @@ if (!fs.existsSync(destinationLogFile)) {
 const stream = fs.createWriteStream(destinationLogFile, { flags: 'a' });
 
 const streams = [
-    { stream: stream, level: fileLogLever, ignore: 'pid,hostname' },
+    //{ stream: stream, level: fileLogLever, ignore: 'pid,hostname' },
     {stream: pino.transport({
         level: logLevel, 
         target: 'pino-pretty',

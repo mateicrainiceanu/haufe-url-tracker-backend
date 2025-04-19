@@ -6,9 +6,7 @@ require("dotenv").config();
 const connectionUrl = process.env.POSTGRES_DB
 const db = new Sequelize(connectionUrl, { dialect: 'postgres', logging: false });
 
-testSequelize();
-
-async function testSequelize() {
+export async function testSequelize() {
     try {
         await db.authenticate();
         logger.info('Connection has been established successfully.');
@@ -18,5 +16,4 @@ async function testSequelize() {
 
 }
 
-export { testSequelize };
 export default db;
