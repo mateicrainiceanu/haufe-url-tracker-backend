@@ -6,6 +6,12 @@ class Team extends Model {
     id: string;
     ownerId: string;
     name: string;
+    users: User[];
+    owner: User;
+
+    addUser!: (user: User) => Promise<void>;
+    getUsers!: () => Promise<User[]>;
+    hasUser!: (user: User) => Promise<boolean>;
 }
 
 Team.init({
