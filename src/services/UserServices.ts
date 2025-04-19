@@ -2,6 +2,7 @@ import { hashPassword } from "../utils/hash";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import { jwtsecret } from "../config/global";
+import Team from "../models/Team";
 
 export default class UserService {
 
@@ -11,12 +12,12 @@ export default class UserService {
     }
 
     static getByEmail(email) {
-        return User.findOne({where: {email}});
+        return User.findOne({ where: { email } });
 
     }
 
     static tokenize(user: User) {
-        const payload = user.get({ plain: true }); 
+        const payload = user.get({ plain: true });
         delete payload.hash;
         return jwt.sign(payload, jwtsecret);
     }

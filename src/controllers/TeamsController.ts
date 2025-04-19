@@ -1,12 +1,12 @@
 import logger from "../config/logger";
 import Team from "../models/Team";
 import User from "../models/User";
+import { TeamService } from "../services/TeamService";
 import UserService from "../services/UserServices";
 
 export default class TeamsController {
     static async createTeam(user: User, teamName?: string) {
-        const team = await Team.create({ ownerId: user.id, name: teamName ? teamName : UserService.getUsername(user) + "'s Team" });
-        await team.addUser(user);
+        const team = await TeamService.createTeam(user, teamName);
 
         logger.info(`Team ${team.id} created`);
 
@@ -14,46 +14,15 @@ export default class TeamsController {
     }
 
     static getTeams(user: User) {
-        const teams = user.getTeams();
-        return teams;
+        return TeamService.getForUser(user);
     }
 
-    static userHasPermissionsOnTeam(user: User, team: Team) {
-        return team.users.findIndex(teamUser => teamUser.id === user.id) !== -1
-    }
-
-    static isUserOwnerOfTeam(user: User, team: Team) {
-        return team.ownerId === user.id;
-    }
-
-    static async getFullTeam(teamId: string) {
-        const team = await Team.findByPk(teamId, {
-            include: [
-                {
-                    model: User,
-                    as: "users",
-                    attributes: ["id", "email"]
-                },
-                {
-                    model: User,
-                    as: "owner",
-                    attributes: ["id", "email"]
-                }
-            ]
-        });
-
-        if (!team) {
-            throw new Error("Team not found");
-        }
-
-        return team;
-    }
 
     static async getFullTeamForUser(teamId: string, user: User) {
 
-        const team = await this.getFullTeam(teamId);
+        const team = await TeamService.getFullTeam(teamId);
 
-        if (!this.userHasPermissionsOnTeam(user, team)) {
+        if (!TeamService.userHasPermissionsOnTeam(user, team)) {
             throw new Error("User has no access to this team");
         }
 
@@ -64,8 +33,7 @@ export default class TeamsController {
         const team = await this.getFullTeamForUser(teamId, user);
 
         if (name) {
-            team.name = name;
-            await team.save();
+            TeamService.updateTeamName(user, team, name);
             logger.info(`Team [${teamId}] updated`);
         }
 
@@ -73,13 +41,14 @@ export default class TeamsController {
     }
 
     static async deleteTeam(teamId: string, user: User) {
-        const team = await this.getFullTeam(teamId);
+        const team = await TeamService.getFullTeam(teamId);
 
-        if (!this.isUserOwnerOfTeam(user, team)) {
+        if (!TeamService.isUserOwnerOfTeam(user, team)) {
             throw new Error("Only owners can delete teams");
         }
 
-        await team.destroy();
+        TeamService.deleteTeam(team);
+
         logger.info(`Team [${teamId}] deleted by owner [${user.id}]`);
     }
 
