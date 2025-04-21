@@ -20,17 +20,20 @@ class UserController {
             throw Error("No user with this email was found!");
         }
 
-        if (!await matchesHash(password, user.hash)){
+        if (!await matchesHash(password, user.hash)) {
             throw Error("Passwords do not match!");
         }
 
         delete user.hash;
-        
+
         const token = UserService.tokenize(user);
 
         return { user, token }
     }
 
+    static async queryByEmail(email: string) {
+        return UserService.findUsersByPartialEmail(email);
+    }
 }
 
 export default UserController;

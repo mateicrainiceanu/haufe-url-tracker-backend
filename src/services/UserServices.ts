@@ -3,6 +3,7 @@ import User from "../models/User";
 import jwt from "jsonwebtoken";
 import { jwtsecret } from "../config/global";
 import Team from "../models/Team";
+import { Op } from "sequelize";
 
 export default class UserService {
 
@@ -24,5 +25,15 @@ export default class UserService {
 
     static getUsername(user: User) {
         return user.email.split("@")[0];
+    }
+
+    static findUsersByPartialEmail(email: string) {
+        return User.findAll({
+            where: {
+                email: {
+                    [Op.iLike]: `%${email}%`
+                }
+            }
+        });
     }
 }

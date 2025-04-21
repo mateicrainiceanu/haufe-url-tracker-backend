@@ -2,6 +2,7 @@ import express from "express";
 import auth, { AuthenticatedRequest } from "../../utils/middleware/auth";
 import TeamsController from "../../controllers/TeamsController";
 import { TeamService } from "../../services/TeamService";
+import {validate as isUUID} from "uuid";
 
 const teamRoutes = express.Router();
 
@@ -28,6 +29,12 @@ teamRoutes.route("/team")
 teamRoutes.route("/team/:teamId").get(async (req: AuthenticatedRequest, res) => {
     const user = req.user;
     const { teamId } = req.params;
+    
+    if (!isUUID(teamId)) {
+        res.status(400).send("Invalid team id");
+        return;
+    }
+
     try {
         const team = await TeamsController.getFullTeamForUser(teamId, user);
         res.status(200).json({ team });
