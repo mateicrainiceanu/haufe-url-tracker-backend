@@ -3,6 +3,7 @@ import auth, { AuthenticatedRequest } from "../../utils/middleware/auth";
 import TeamsController from "../../controllers/TeamsController";
 import { TeamService } from "../../services/TeamService";
 import {validate as isUUID} from "uuid";
+import teamUserRouter from "./teamUserRoutes";
 
 const teamRoutes = express.Router();
 
@@ -63,5 +64,8 @@ teamRoutes.route("/team/:teamId").get(async (req: AuthenticatedRequest, res) => 
             res.status(403).send(error.message);
         })
     });
+
+
+    teamRoutes.use("/team", teamUserRouter);
 
 export default teamRoutes;

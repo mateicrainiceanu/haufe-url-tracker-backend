@@ -11,6 +11,7 @@ class Team extends Model {
 
     addUser!: (user: User) => Promise<void>;
     getUsers!: () => Promise<User[]>;
+    removeUser!: (user: User) => void;
     hasUser!: (user: User) => Promise<boolean>;
 }
 

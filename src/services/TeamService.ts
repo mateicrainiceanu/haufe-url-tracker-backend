@@ -68,4 +68,13 @@ export class TeamService {
         return team.destroy();
     }
 
+    static addUserToTeam(user: User, team: Team) {
+        return user.addTeam(team)
+
+    }
+
+    static removeUserFromTeam(user: User, team: Team) {
+        return team.removeUser(user);
+    }
+
 }

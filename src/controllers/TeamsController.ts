@@ -2,6 +2,7 @@ import logger from "../config/logger";
 import Team from "../models/Team";
 import User from "../models/User";
 import { TeamService } from "../services/TeamService";
+import UserService from "../services/UserServices";
 
 export default class TeamsController {
     static async createTeam(user: User, teamName?: string) {
@@ -47,6 +48,54 @@ export default class TeamsController {
         TeamService.deleteTeam(team);
 
         logger.info(`Team [${teamId}] deleted by owner [${user.id}]`);
+    }
+
+    static async addUserToTeam(user: User, teamId: string, userId: string) {
+        const team = await TeamService.getFullTeam(teamId);
+
+        if (!TeamService.isUserOwnerOfTeam(user, team)) {
+            throw new Error("Only owners can add users to teams");
+        }
+
+        const userToAdd = await User.findByPk(userId);
+
+        if (!userToAdd) {
+            throw new Error("User not found");
+        }
+
+        if (TeamService.userHasPermissionsOnTeam(userToAdd, team)) {
+            throw new Error("User already has access to this team");
+        }
+
+        await TeamService.addUserToTeam(userToAdd, team);
+
+        logger.info(`User [${user.id}] added user [${userToAdd.id}] to team [${teamId}]`);
+
+        return team;
+    }
+
+    static async removeUserFromTeam(user: User, teamId: string, userId: string) {
+        const team = await TeamService.getFullTeam(teamId);
+
+        if (!TeamService.isUserOwnerOfTeam(user, team)) {
+            throw new Error("Only owners can remove users from teams");
+        }
+
+        const userToRemove = await User.findByPk(userId);
+
+        if (!userToRemove) {
+            throw new Error("User not found");
+        }
+
+        if (!TeamService.userHasPermissionsOnTeam(userToRemove, team)) {
+            throw new Error("User does not have access to this team");
+        }
+
+        await TeamService.removeUserFromTeam(userToRemove, team);
+
+        logger.info(`User [${user.id}] removed user [${userToRemove.id}] from team [${teamId}]`);
+
+        return TeamService.getFullTeam(teamId);
     }
 
 }
