@@ -2,27 +2,24 @@ import logger from "../config/logger";
 import Team from "../models/Team";
 import User from "../models/User";
 import { TeamService } from "../services/TeamService";
-import UserService from "../services/UserServices";
 
 export default class TeamsController {
     static async createTeam(user: User, teamName?: string) {
         const team = await TeamService.createTeam(user, teamName);
 
-        logger.info(`Team ${team.id} created`);
-
         return team;
     }
 
     static getTeams(user: User) {
-        return TeamService.getForUser(user);
+        return TeamService.getFullForUser(user);
     }
-
 
     static async getFullTeamForUser(teamId: string, user: User) {
 
         const team = await TeamService.getFullTeam(teamId);
 
         if (!TeamService.userHasPermissionsOnTeam(user, team)) {
+            logger.warn(`User [${user.id}] tried to access team [${teamId}]`);
             throw new Error("User has no access to this team");
         }
 

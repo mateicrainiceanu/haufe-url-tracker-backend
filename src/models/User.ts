@@ -3,12 +3,15 @@ import db from "../config/db";
 import Team from "./Team";
 
 class User extends Model {
+    static getTeams(arg0: { include: { model: typeof User; as: string; attributes: string[]; }[]; }) {
+        throw new Error("Method not implemented.");
+    }
     id: string;
     email: string;
     hash: string;
 
     addTeam!: (team: Team) => Promise<void>;
-    getTeams!: () => Promise<Team[]>;
+    getTeams!: (prop: object) => Promise<Team[]>;
     hasTeam!: (team: Team) => Promise<boolean>;
 }
 

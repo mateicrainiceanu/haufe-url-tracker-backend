@@ -1,6 +1,5 @@
 import { Request } from 'express';
-import { decode } from 'jsonwebtoken';
-import { AuthUser, decodeToken } from '../decodeToken';
+import { decodeToken } from '../decodeToken';
 import logger from '../../config/logger';
 import User from '../../models/User';
 
@@ -38,7 +37,7 @@ export default async function auth(req: AuthenticatedRequest, res, next) {
 
         req.user = user
 
-        logger.info(`User [${req.user.id}] verified`);
+        logger.info(`User [${req.user.id}] verified for [${req.method}] at [${req.path}]`);
         next();
     } catch (error) {
         res.status(401).send(error.message);
