@@ -33,7 +33,8 @@ export default class UserService {
                 email: {
                     [Op.iLike]: `%${email}%`
                 }
-            }
+            }, 
+            limit: 5,
         });
     }
 }
