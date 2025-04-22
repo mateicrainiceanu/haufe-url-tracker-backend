@@ -1,0 +1,17 @@
+import Redirect from "../models/Redirect";
+import randomstring from "randomstring";
+
+export default class RedirectService {
+
+    static generateKeyword() {
+        return randomstring.generate(10);
+    }
+
+    static async createSimpleRedirect(dest: string) {
+        return Redirect.create({url: dest, keyword: this.generateKeyword()});
+    }
+
+    static async createKeywordRedirect(dest: string, keyword: string) {
+        return Redirect.create({url: dest, keyword});
+    }
+}
