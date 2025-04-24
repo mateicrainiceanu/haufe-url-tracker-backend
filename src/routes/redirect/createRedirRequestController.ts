@@ -31,8 +31,8 @@ async function unauthCreateRedirect(req: Request, res: Response, next: NextFunct
 
     try {
 
-        const redirect = await RedirectController.createRedirect(url, keyword);
-        res.status(201).json({ redirect });
+        const response = await RedirectController.createRedirect(url, keyword);
+        res.status(201).json(response);
 
     } catch (error) {
         if (error.message == "Validation error") {
@@ -55,8 +55,8 @@ export async function createAuthRequest(req: AuthenticatedRequest, res: Response
     }
 
     try {
-        const redirect = await RedirectController.createRedirect(url, keyword, teamId, req.user);
-        res.status(201).json({ redirect });
+        const response = await RedirectController.createRedirect(url, keyword, teamId, req.user);
+        res.status(201).json(response);
     } catch (error) {
         if (error.message == "Validation error") {
             res.status(400).send("Invalid short word. Please try another one");
