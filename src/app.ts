@@ -12,6 +12,7 @@ import { initAssociations } from './models/associations';
 import teamRoutes from './routes/team/teamRoutes';
 import userRouter from './routes/users/userRoutes';
 import redirectRoutes from './routes/redirect/redirectRoutes';
+import trackerRoutes from './routes/tracker/trackerRoutes';
 
 const app = express();
 const port = 3000;
@@ -27,6 +28,7 @@ app.get('/api/v1/', auth, async (req, res) => {
 app.use("/api/v1/", registerRoute, loginRoute);
 app.use("/api/v1/", userRouter)
 app.use("/api/v1/", redirectRoutes);
+app.use("/api/v1/", trackerRoutes);
 app.use("/api/v1/", auth, teamRoutes);
 
 

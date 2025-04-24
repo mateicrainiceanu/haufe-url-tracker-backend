@@ -1,5 +1,6 @@
 import logger from "../config/logger";
 import Team from "../models/Team";
+import Tracker from "../models/Tracker";
 import User from "../models/User";
 import UserService from "./UserServices";
 
@@ -75,6 +76,10 @@ export class TeamService {
 
     static removeUserFromTeam(user: User, team: Team) {
         return team.removeUser(user);
+    }
+
+    static addTrackerToTeam(team: Team, tracker: Tracker) {
+        return team.addTracker(tracker);
     }
 
 }

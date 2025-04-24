@@ -1,6 +1,8 @@
 import logger from "../config/logger";
+import Tracker from "../models/Tracker";
 import User from "../models/User";
 import RedirectService from "../services/RedirectService";
+import { TeamService } from "../services/TeamService";
 import { TrackerService } from "../services/TrackerService";
 import TeamsController from "./TeamsController";
 
@@ -29,6 +31,8 @@ export default class RedirectController {
             }
 
             const tracker = await TrackerService.createForRedirect(redirect);
+
+            await TeamService.addTrackerToTeam(team, tracker);
 
             return { redirect: {...redirect.get({plain: true}), tracker}, tracker };
         }
