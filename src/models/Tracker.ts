@@ -1,10 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../config/db";
+import Team from "./Team";
 
 class Tracker extends Model {
     id: string;
     name: string;
     description: string;
+    team: Team;
 }
 
 Tracker.init({

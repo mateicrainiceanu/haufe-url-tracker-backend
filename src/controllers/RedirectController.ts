@@ -34,7 +34,7 @@ export default class RedirectController {
 
             await TeamService.addTrackerToTeam(team, tracker);
 
-            return { redirect: {...redirect.get({plain: true}), tracker}, tracker };
+            return { redirect: { ...redirect.get({ plain: true }), tracker }, tracker: { ...tracker.get({ plain: true }), redirect } };
         }
     }
 }

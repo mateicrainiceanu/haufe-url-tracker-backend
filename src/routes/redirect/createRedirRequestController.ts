@@ -11,22 +11,16 @@ export function requestHandler(req: Request, res: Response, next: NextFunction) 
         return;
     }
 
-    const { url } = req.body;
-    if (!url) {
-        res.status(400).send('Bad Request: No URL provided');
-        return;
-    }
-
     const token = req.get('authorization');
     if (!token) {
-        unauthCreateRedirect(req, res, next);
+        unauthCreateRedirect(req, res);
         return;
     }
 
     next();
 }
 
-async function unauthCreateRedirect(req: Request, res: Response, next: NextFunction) {
+async function unauthCreateRedirect(req: Request, res: Response) {
     const { url, keyword } = req.body;
 
     try {

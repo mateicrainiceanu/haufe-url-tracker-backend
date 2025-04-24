@@ -11,8 +11,8 @@ export const initAssociations = () => {
 
     Tracker.belongsTo(Redirect, { foreignKey: "redirectId", as: "redirect" });
 
-    Team.belongsToMany(Tracker, { through: "TeamTrackers", as: "trackers" });
-    Tracker.belongsToMany(Team, { through: "TeamTrackers", as: "teams" });
+    Team.hasMany(Tracker, { foreignKey: "teamId", as: "trackers" });
+    Tracker.belongsTo(Team, { foreignKey: "teamId", as: "team" });
 
     logger.info("Associations were created");
 }
