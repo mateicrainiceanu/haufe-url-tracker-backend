@@ -1,5 +1,5 @@
 import express from 'express';
-import auth from '../../utils/middleware/auth';
+import auth, { AuthenticatedRequest } from '../../utils/middleware/auth';
 import team, { AuthUserTeamRequest } from '../../utils/middleware/teamMiddleware';
 import TrackerController from '../../controllers/TrackerController';
 import RedirectController from '../../controllers/RedirectController';
@@ -33,7 +33,7 @@ trackerRoutes.route("/tracker")
 
 trackerRoutes.route("/tracker/:trackerId")
     //implement get
-    .put(auth, async (req: AuthUserTeamRequest, res) => {
+    .put(auth, async (req: AuthenticatedRequest, res) => {
         const { trackerId } = req.params;
 
         if (!req.body)
@@ -59,6 +59,32 @@ trackerRoutes.route("/tracker/:trackerId")
             res.status(200).json({ tracker });
         } catch (error) {
             logger.error(`Failed to update tracker id [${trackerId}] - ${error.message}`);
+            res.status(500).send(error.message || "An error occurred");
+        }
+    })
+    .delete(auth, async (req: AuthenticatedRequest, res) => {
+        const { trackerId } = req.params;
+        const { keepRedirect } = req.query;
+        const { user } = req;
+
+        var kr = false;
+
+        if (keepRedirect && keepRedirect == "true") {
+            kr = true;
+        }
+
+        if (!trackerId) {
+            logger.error("Request could not be processed - tracker id missing");
+            res.status(400).send("Invalid request - tracker id missing");
+            return;
+        }
+
+        try {
+            await TrackerController.deleteTracker(trackerId, user, kr);
+            logger.info(`Tracker id [${trackerId}] deleted`);
+            res.status(204).send();
+        } catch (error) {
+            logger.error(`Failed to delete tracker id [${trackerId}] - ${error.message}`);
             res.status(500).send(error.message || "An error occurred");
         }
     });

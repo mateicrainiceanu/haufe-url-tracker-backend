@@ -14,4 +14,8 @@ export default class RedirectService {
     static async createKeywordRedirect(dest: string, keyword: string) {
         return Redirect.create({url: dest, keyword});
     }
+
+    static deleteRedirect(redirect: Redirect) {
+        return redirect.destroy();
+    }
 }

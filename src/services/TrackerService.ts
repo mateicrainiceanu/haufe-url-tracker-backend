@@ -56,7 +56,7 @@ export class TrackerService {
 
     }
 
-    static async getTrackerData(trackerId: string, team: Team, user: User) {
+    static async getTrackerData(trackerId: string, user: User) {
         const tracker = await this.getFullTracker(trackerId);
         if (!tracker) {
             throw new Error("Tracker not found");
@@ -73,6 +73,10 @@ export class TrackerService {
         logger.info(`Updating tracker ${tracker.id} with name ${tracker.name} -> ${name} and description ${tracker.description} -> ${description}`);
         const newdesc = description || "";
         return tracker.update({ name, description: newdesc });
+    }
+
+    static deleteTracker(tracker: Tracker) {
+        return tracker.destroy();
     }
 
 }
