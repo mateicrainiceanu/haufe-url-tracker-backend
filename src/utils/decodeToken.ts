@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { jwtsecret } from '../config/global';
+import logger from '../config/logger';
 
 export interface AuthUser {
     id: string;
@@ -11,7 +12,8 @@ export function decodeToken(token: string): AuthUser {
     const decoded = jwt.verify(token, jwtsecret) as AuthUser;
 
     if (!decoded) {
-        throw new Error('Invalid token: Request us unauthorized');
+        logger.error('Invalid token: Request is unauthorized');
+        throw new Error('Invalid token: Request is unauthorized');
     }
     
     return decoded;

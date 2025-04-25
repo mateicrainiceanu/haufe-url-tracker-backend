@@ -1,3 +1,4 @@
+import logger from "../config/logger";
 import AccessLog from "../models/AccessLog";
 import Tracker from "../models/Tracker";
 
@@ -16,6 +17,8 @@ export interface LogData {
 
 class AccessLogService {
     static async logAccess(tracker: Tracker, data: LogData) {
+        logger.trace("AccessLogService.logAccess");
+
         if (!tracker?.id) {
             throw new Error("Tracker is invalid or missing ID");
         }

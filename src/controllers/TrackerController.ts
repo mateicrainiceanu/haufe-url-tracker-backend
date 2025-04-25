@@ -28,18 +28,15 @@ export default class TrackerController {
             throw new Error("Tracker not found");
         }
 
-        if (TrackerService.checkTrackerOwnership(tracker, user)) {
-            const redirect = tracker.redirect;
 
-            await TrackerService.deleteTracker(tracker);
+        const redirect = tracker.redirect;
 
-            if (!keepRedirect) {
-                await RedirectService.deleteRedirect(redirect);
-                return;
-            }
+        await TrackerService.deleteTracker(tracker);
+
+        if (!keepRedirect) {
+            await RedirectService.deleteRedirect(redirect);
             return;
         }
-
-        throw new Error("User or team is not authorized to delete this tracker");
+        return;
     }
 }

@@ -37,7 +37,7 @@ export default async function auth(req: AuthenticatedRequest, res, next) {
 
         req.user = user
 
-        logger.info(`User [${req.user.id}] verified for [${req.method}] at [${req.path}]`);
+        logger.debug(`User [${req.user.id}] verified for [${req.method}] at [${req.path}]`);
         next();
     } catch (error) {
         res.status(401).send(error.message);
