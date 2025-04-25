@@ -3,6 +3,7 @@ import Tracker from "../models/Tracker";
 import { Request } from "express";
 import geoip from "geoip-lite";
 import * as UAParserJS from "ua-parser-js"
+import AccessLogService from "../services/AccessLogService";
 
 export default class AccessController {
 
@@ -35,18 +36,19 @@ export default class AccessController {
         const region = geo?.region || emptyWord;
         const timezone = geo?.timezone || emptyWord;
 
+        const accessLog = await AccessLogService.logAccess(tracker, {
+            ip: ip as string,
+            language,
+            browser,
+            deviceModel,
+            deviceVendor,
+            deviceOs,
+            country,
+            city,
+            region,
+            timezone
+        });
 
-
-        logger.info(ip);
-        logger.info(language)
-        logger.info(browser)
-        logger.info(deviceModel)
-        logger.info(deviceVendor)
-        logger.info(deviceOs)
-        logger.info(country)
-        logger.info(city)
-        logger.info(region)
-        logger.info(timezone)
-
+        logger.info(`Access log created for tracker [TRACKERID: ${tracker.id}] with id [LOGID: ${accessLog.id}]`);
     }
 }

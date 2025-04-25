@@ -1,4 +1,5 @@
 import logger from "../config/logger";
+import AccessLog from "./AccessLog";
 import Redirect from "./Redirect";
 import Team from "./Team";
 import Tracker from "./Tracker";
@@ -14,6 +15,15 @@ export const initAssociations = () => {
 
     Team.hasMany(Tracker, { foreignKey: "teamId", as: "trackers" });
     Tracker.belongsTo(Team, { foreignKey: "teamId", as: "team" });
+
+    AccessLog.belongsTo(Tracker, {
+        foreignKey: "trackerId",
+        as: "tracker",
+    });
+    Tracker.hasMany(AccessLog, {
+        foreignKey: "trackerId",
+        as: "accessLogs",
+    });
 
     logger.info("Associations were created");
 }
