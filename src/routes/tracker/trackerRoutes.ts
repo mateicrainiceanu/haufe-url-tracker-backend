@@ -16,10 +16,13 @@ trackerRoutes.route("/tracker")
         res.status(200).json({ trackers });
     })
     .post(auth, async (req, res) => {
-        const { keyword, url, teamId } = req.body;
+        const { keyword, url, teamId, name, description } = req.body;
+        const { user } = req;
+
+        logger.info("Name " + req.body)
 
         try {
-            const response = await RedirectController.createRedirect(keyword, url, teamId);
+            const response = await RedirectController.createRedirect(url, keyword, teamId, user, name, description);
             res.status(201).json(response);
         } catch (error) {
             if (error.message == "Validation error") {

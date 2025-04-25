@@ -7,9 +7,10 @@ import { TeamService } from "./TeamService";
 
 export class TrackerService {
 
-    static async createForRedirect(redirect: Redirect) {
-        const name = redirect.keyword + " " + redirect.url;
-        const tracker = await Tracker.create({ name, redirectId: redirect.id });
+    static async createForRedirect(redirect: Redirect, optName?: string, optDescription?: string) {
+        const name = optName || redirect.keyword + " " + redirect.url;
+        const description = optDescription || null;
+        const tracker = await Tracker.create({ name, description, redirectId: redirect.id });
 
         return tracker;
     }

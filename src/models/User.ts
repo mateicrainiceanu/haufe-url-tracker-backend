@@ -3,9 +3,12 @@ import db from "../config/db";
 import Team from "./Team";
 
 class User extends Model {
+    
+    //@REMOVE
     static getTeams(arg0: { include: { model: typeof User; as: string; attributes: string[]; }[]; }) {
         throw new Error("Method not implemented.");
     }
+
     id: string;
     email: string;
     hash: string;

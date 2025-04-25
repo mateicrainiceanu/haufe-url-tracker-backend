@@ -7,7 +7,14 @@ import { TrackerService } from "../services/TrackerService";
 import TeamsController from "./TeamsController";
 
 export default class RedirectController {
-    static async createRedirect(dest: string, keyword?: string, teamId?: string, user?: User) {
+    static async createRedirect(
+        dest: string,
+        keyword?: string,
+        teamId?: string,
+        user?: User,
+        name?: string,
+        description?: string
+    ) {
         const kw = keyword || RedirectService.generateKeyword();
         if (!dest) {
             throw new Error("Destination URL is required");
@@ -30,7 +37,9 @@ export default class RedirectController {
                 throw new Error("Failed to create redirect");
             }
 
-            const tracker = await TrackerService.createForRedirect(redirect);
+            logger.info("Name" + name)
+
+            const tracker = await TrackerService.createForRedirect(redirect, name, description);
 
             await TeamService.addTrackerToTeam(team, tracker);
 
