@@ -13,12 +13,15 @@ import teamRoutes from './routes/team/teamRoutes';
 import userRouter from './routes/users/userRoutes';
 import redirectRoutes from './routes/redirect/redirectRoutes';
 import trackerRoutes from './routes/tracker/trackerRoutes';
+import rootRouter from './routes/redirect/destinationRedirectRoute';
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.use(rootRouter);
 
 app.get('/api/v1/', auth, async (req, res) => {
   const users = await User.findAll();

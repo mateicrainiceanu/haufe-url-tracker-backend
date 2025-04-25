@@ -1,5 +1,4 @@
 import logger from "../config/logger";
-import Tracker from "../models/Tracker";
 import User from "../models/User";
 import RedirectService from "../services/RedirectService";
 import { TeamService } from "../services/TeamService";
@@ -7,6 +6,16 @@ import { TrackerService } from "../services/TrackerService";
 import TeamsController from "./TeamsController";
 
 export default class RedirectController {
+
+    static async findByKw(keyword: string) {
+        const redirect = await RedirectService.getRedirectByKeyword(keyword);
+        if (!redirect) {
+            logger.error(`Redirect with keyword [${keyword}] not found`);
+            throw new Error("Redirect not found");
+        }
+        return redirect;
+    }   
+
     static async createRedirect(
         dest: string,
         keyword?: string,

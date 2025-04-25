@@ -18,9 +18,7 @@ trackerRoutes.route("/tracker")
     .post(auth, async (req, res) => {
         const { keyword, url, teamId, name, description } = req.body;
         const { user } = req;
-
-        logger.info("Name " + req.body)
-
+        
         try {
             const response = await RedirectController.createRedirect(url, keyword, teamId, user, name, description);
             res.status(201).json(response);
