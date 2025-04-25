@@ -17,8 +17,8 @@ const stream = fs.createWriteStream(destinationLogFile, { flags: 'a' });
 const streams = [
     //{ stream: stream, level: fileLogLever, ignore: 'pid,hostname' },
     {stream: pino.transport({
-        level: logLevel, 
         target: 'pino-pretty',
+        level: logLevel,
         options: {
             colorize: true,
             translateTime: 'SYS:standard',
@@ -27,9 +27,6 @@ const streams = [
     })},
 ]
 
-const logger = pino({
-    level: logLevel,
-
-}, multistream(streams));
+const logger = pino({}, multistream(streams));
 
 export default logger;

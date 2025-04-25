@@ -1,10 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../config/db";
+import Tracker from "./Tracker";
 
 class Redirect extends Model {
     id: string;
     keyword: string;
     url: string;
+    tracker?: Tracker
 }
 
 Redirect.init({

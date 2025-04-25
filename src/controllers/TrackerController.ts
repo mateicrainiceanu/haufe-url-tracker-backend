@@ -1,5 +1,4 @@
-import logger from "../config/logger";
-import Redirect from "../models/Redirect";
+
 import Team from "../models/Team";
 import User from "../models/User";
 import RedirectService from "../services/RedirectService";
