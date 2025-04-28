@@ -5,12 +5,6 @@ import RedirectController from '../../controllers/RedirectController';
 import { AuthenticatedRequest } from '../../utils/middleware/auth';
 
 export function requestHandler(req: Request, res: Response, next: NextFunction) {
-
-    if (!req.body) {
-        res.status(400).send('Bad Request: No body provided');
-        return;
-    }
-
     const token = req.get('authorization');
     if (!token) {
         unauthCreateRedirect(req, res);

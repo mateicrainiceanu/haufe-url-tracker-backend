@@ -3,6 +3,12 @@ import UserService from "../services/UserServices";
 import { matchesHash } from "../utils/hash";
 
 class UserController {
+
+    static async existsWithEmail(email: string) {
+        const foundUser = await UserService.getByEmail(email);
+        return foundUser !== null;
+    }
+
     static async registerUser(email, password) {
         const user = await UserService.createUser(email, password);
 

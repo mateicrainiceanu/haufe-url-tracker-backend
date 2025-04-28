@@ -1,8 +1,6 @@
 import express from 'express';
 import RedirectController from '../../controllers/RedirectController';
 import logger from '../../config/logger';
-import * as UAParserJS from "ua-parser-js"
-import geoip from 'geoip-lite';
 import AccessController from '../../controllers/AccessController';
 
 const rootRouter = express.Router();

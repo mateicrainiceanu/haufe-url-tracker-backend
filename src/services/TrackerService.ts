@@ -78,7 +78,7 @@ export class TrackerService {
     static async updateTracker(tracker: Tracker, name: string, description?: string) {
 
         logger.trace(`TrackerService.updateTracker [TID: ${tracker.id}] [NEW_NAME: ${name}] [NEW_DESC: ${description}]`);
-        logger.info(`Updating tracker ${tracker.id} with name ${tracker.name} -> ${name} and description ${tracker.description} -> ${description}`);
+        logger.info(`Updating tracker [${tracker.id}] with name "${tracker.name}" -> "${name}" and description "${tracker.description}" -> "${description}"`);
 
         const newdesc = description || "";
         return tracker.update({ name, description: newdesc });
