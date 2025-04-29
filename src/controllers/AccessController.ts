@@ -4,6 +4,8 @@ import { Request } from "express";
 import geoip from "geoip-lite";
 import * as UAParserJS from "ua-parser-js"
 import AccessLogService from "../services/AccessLogService";
+import User from "../models/User";
+import { TrackerService } from "../services/TrackerService";
 
 export default class AccessController {
 
@@ -50,5 +52,22 @@ export default class AccessController {
         });
 
         logger.info(`Access log created for tracker [TRACKERID: ${tracker.id}] with id [LOGID: ${accessLog.id}]`);
+    }
+
+    static async getAccessData(trackerId: string, user: User) {
+        if (!trackerId) {
+            throw new Error("Tracker not found");
+        }
+
+        const tracker = await TrackerService.getTrackerData(trackerId, user);
+
+        if (!tracker) {
+            throw new Error("Tracker not found");
+        }
+
+        const accessLogs = await AccessLogService.getLogsForTracker(tracker);
+
+        return accessLogs;
+
     }
 }

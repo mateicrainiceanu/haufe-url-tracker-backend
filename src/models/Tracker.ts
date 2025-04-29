@@ -2,6 +2,7 @@ import { DataTypes, Model } from "sequelize";
 import db from "../config/db";
 import Team from "./Team";
 import Redirect from "./Redirect";
+import AccessLog from "./AccessLog";
 
 class Tracker extends Model {
     id: string;
@@ -9,6 +10,8 @@ class Tracker extends Model {
     description: string;
     team: Team;
     redirect: Redirect;
+
+    getAccessLogs!: (query: object) => Promise<AccessLog[]>;
 }
 
 Tracker.init({

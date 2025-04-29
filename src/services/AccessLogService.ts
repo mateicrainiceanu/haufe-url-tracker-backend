@@ -32,6 +32,10 @@ class AccessLogService {
             throw new Error(`Failed to create access log for tracker ${tracker.id}: ${error.message}`);
         }
     }
+
+    static getLogsForTracker(tracker: Tracker) {
+        return tracker.getAccessLogs({});
+    } 
 }
 
 export default AccessLogService;
