@@ -5,3 +5,4 @@ deployment:
     - npm install
     - npm run build
     - touch tmp/restart.txt
+    - rm tmp/restart.txt
