@@ -24,7 +24,7 @@ app.use(cors());
 app.use(rootRouter);
 
 app.get('/api/v1/status', async (req, res) => {
-  res.status(200).json({ status: 'ok', code: 2 });
+  res.status(200).json({ status: 'ok', code: 3 });
 });
 
 app.use("/api/v1/", registerRoute, loginRoute);
