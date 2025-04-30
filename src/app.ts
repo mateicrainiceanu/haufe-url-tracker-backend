@@ -23,10 +23,9 @@ app.use(cors());
 
 app.use(rootRouter);
 
-// app.get('/api/v1/', auth, async (req, res) => {
-//   const users = await User.findAll();
-//   res.json(users)
-// });
+app.get('/api/v1/status', async (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 app.use("/api/v1/", registerRoute, loginRoute);
 app.use("/api/v1/", userRouter)
