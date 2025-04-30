@@ -1,3 +1,4 @@
+---
 deployment:
   tasks:
     - source /home/lenauro/nodevenv/url-tracker.lenau.ro/20/bin/activate && cd /home/lenauro/url-tracker.lenau.ro
