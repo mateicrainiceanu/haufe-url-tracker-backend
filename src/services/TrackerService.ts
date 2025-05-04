@@ -64,11 +64,12 @@ export class TrackerService {
     static async getTrackerData(trackerId: string, user: User) {
         logger.trace(`TrackerService.getTrackerData [${trackerId}] [${user.id}]`);
         const tracker = await this.getFullTracker(trackerId);
+        
         if (!tracker) {
             throw new Error("Tracker not found");
         }
 
-        if (TrackerService.checkTrackerOwnership(tracker, user)) {
+        if (this.checkTrackerOwnership(tracker, user)) {
             return tracker;
         };
 

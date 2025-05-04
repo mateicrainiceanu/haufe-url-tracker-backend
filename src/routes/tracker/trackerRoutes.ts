@@ -6,7 +6,7 @@ import RedirectController from '../../controllers/RedirectController';
 import logger from '../../config/logger';
 import validate from "../../utils/middleware/validate";
 import { body, param } from 'express-validator';
-import {validate as isValidUUID} from 'uuid';
+import { validate as isValidUUID } from 'uuid';
 import AccessController from '../../controllers/AccessController';
 
 const trackerRoutes = express.Router();
@@ -36,23 +36,22 @@ trackerRoutes.route("/tracker")
         }
     });
 
-trackerRoutes.route("/tracker/:trackerId")
-    //implement get
-    .get(auth, validate([
-        param("trackerId").isString().custom(isValidUUID).withMessage("Tracker id is required and must be a valid UUID")
-    ]), async (req: AuthenticatedRequest, res) => {
-        const { trackerId } = req.params;
-        const { user } = req;
+trackerRoutes.get("/tracker/:trackerId/access-logs", auth, validate([
+    param("trackerId").isString().custom(isValidUUID).withMessage("Tracker id is required and must be a valid UUID")
+]), async (req: AuthenticatedRequest, res) => {
+    const { trackerId } = req.params;
+    const { user } = req;
 
-        try {
-            const accessData = await AccessController.getAccessData(trackerId, user);
-            res.status(200).json({ accessData });
-        } catch (error) {
-            logger.error(`Failed to get tracker id [${trackerId}] - ${error.message}`);
-            res.status(500).send(error.message || "An error occurred");
-        }
-    })
-    
+    try {
+        const { tracker, accessLogs } = await AccessController.getAccessData(trackerId, user);
+        res.status(200).json({ tracker, accessLogs });
+    } catch (error) {
+        logger.error(`Failed to get tracker id [${trackerId}] - ${error.message}`);
+        res.status(500).send(error.message || "An error occurred");
+    }
+});
+
+trackerRoutes.route("/tracker/:trackerId")
     .put(auth,
         validate([
             param("trackerId").isString().custom(isValidUUID).withMessage("Tracker id is required and must be a valid UUID"),
@@ -78,23 +77,23 @@ trackerRoutes.route("/tracker/:trackerId")
     .delete(auth,
         validate([
             param("trackerId").isString().custom(isValidUUID).withMessage("Tracker id is required and must be a valid UUID")
-        ]), 
+        ]),
 
         async (req: AuthenticatedRequest, res) => {
-        const { trackerId } = req.params;
-        const { keepRedirect } = req.query;
-        const { user } = req;
+            const { trackerId } = req.params;
+            const { keepRedirect } = req.query;
+            const { user } = req;
 
-        const kr = keepRedirect && keepRedirect == "true";
+            const kr = keepRedirect && keepRedirect == "true";
 
-        try {
-            await TrackerController.deleteTracker(trackerId, user, kr);
-            logger.info(`Tracker id [${trackerId}] deleted`);
-            res.status(204).send();
-        } catch (error) {
-            logger.error(`Failed to delete tracker id [${trackerId}] - ${error.message}`);
-            res.status(500).send(error.message || "An error occurred");
-        }
-    });
+            try {
+                await TrackerController.deleteTracker(trackerId, user, kr);
+                logger.info(`Tracker id [${trackerId}] deleted`);
+                res.status(204).send();
+            } catch (error) {
+                logger.error(`Failed to delete tracker id [${trackerId}] - ${error.message}`);
+                res.status(500).send(error.message || "An error occurred");
+            }
+        });
 
 export default trackerRoutes;

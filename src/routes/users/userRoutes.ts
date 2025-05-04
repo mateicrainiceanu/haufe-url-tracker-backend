@@ -9,6 +9,7 @@ const userRouter = express.Router();
 userRouter.get('/user', auth, validate([
     query("email").isString().isLength({ min: 3 }).withMessage("Email must be at least 3 characters long")
 ]), async (req, res) => {
+    
     const { email } = req.query;
 
     try {

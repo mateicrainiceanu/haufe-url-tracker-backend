@@ -55,19 +55,20 @@ export default class AccessController {
     }
 
     static async getAccessData(trackerId: string, user: User) {
+        
         if (!trackerId) {
             throw new Error("Tracker not found");
         }
-
+        
         const tracker = await TrackerService.getTrackerData(trackerId, user);
-
+        
         if (!tracker) {
             throw new Error("Tracker not found");
         }
 
         const accessLogs = await AccessLogService.getLogsForTracker(tracker);
 
-        return accessLogs;
+        return { tracker, accessLogs };
 
     }
 }
