@@ -1,6 +1,7 @@
 import logger from "../config/logger";
 import AccessLog from "../models/AccessLog";
 import Tracker from "../models/Tracker";
+import CustomError from "../utils/CustomError";
 
 export interface LogData {
     ip: string;
@@ -20,7 +21,7 @@ class AccessLogService {
         logger.trace("AccessLogService.logAccess");
 
         if (!tracker?.id) {
-            throw new Error("Tracker is invalid or missing ID");
+            throw new CustomError(400, "Tracker is invalid or missing ID");
         }
 
         try {
@@ -29,7 +30,7 @@ class AccessLogService {
                 ...data
             });
         } catch (error) {
-            throw new Error(`Failed to create access log for tracker ${tracker.id}: ${error.message}`);
+            throw new CustomError(500, `Failed to create access log for tracker ${tracker.id}: ${error.message}`);
         }
     }
 

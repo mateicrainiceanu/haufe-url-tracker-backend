@@ -3,6 +3,7 @@ import Redirect from "../models/Redirect";
 import Team from "../models/Team";
 import Tracker from "../models/Tracker";
 import User from "../models/User";
+import CustomError from "../utils/CustomError";
 import { TeamService } from "./TeamService";
 
 export class TrackerService {
@@ -66,14 +67,14 @@ export class TrackerService {
         const tracker = await this.getFullTracker(trackerId);
         
         if (!tracker) {
-            throw new Error("Tracker not found");
+            throw new CustomError(404, "Tracker not found");
         }
 
         if (this.checkTrackerOwnership(tracker, user)) {
             return tracker;
         };
 
-        throw new Error("User or team is not authorized to view this tracker");
+        throw new CustomError(404, "User or team is not authorized to view this tracker");
     }
 
     static async updateTracker(tracker: Tracker, name: string, description?: string) {

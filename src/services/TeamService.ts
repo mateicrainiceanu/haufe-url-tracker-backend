@@ -2,6 +2,7 @@ import logger from "../config/logger";
 import Team from "../models/Team";
 import Tracker from "../models/Tracker";
 import User from "../models/User";
+import CustomError from "../utils/CustomError";
 import UserService from "./UserServices";
 
 export class TeamService {
@@ -62,7 +63,7 @@ export class TeamService {
 
         if (!team) {
             logger.error(`TeamService.getFullTeam [${teamId}] - Team not found`);
-            throw new Error("Team not found");
+            throw new CustomError(404, "Team not found");
         }
 
         return team;
@@ -72,7 +73,7 @@ export class TeamService {
         logger.trace(`TeamService.updateTeamName [UID: ${user.id}] [TID: ${team.id}] [NEW_NAME: ${name}]`);
         if (!this.userHasPermissionsOnTeam(user, team)) {
             logger.error(`TeamService.updateTeamName [${user.id}] [${team.id}] - User does not have permissions on team`);
-            throw new Error("User does not have permissions on team");
+            throw new CustomError(401, "User does not have permissions on team");
         }
 
         team.name = name;

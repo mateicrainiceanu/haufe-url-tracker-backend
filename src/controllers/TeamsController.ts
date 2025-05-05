@@ -20,6 +20,10 @@ export default class TeamsController {
 
         const team = await TeamService.getFullTeam(teamId);
 
+        if (!team) {
+            throw new CustomError(404, "Team was not found");
+        }
+
         if (!TeamService.userHasPermissionsOnTeam(user, team)) {
             logger.warn(`User [${user.id}] tried to access team [${teamId}]`);
             throw new CustomError(401, "User has no access to this team");

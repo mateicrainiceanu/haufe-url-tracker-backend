@@ -44,12 +44,9 @@ teamRoutes.route("/team/:teamId")
                 return;
             }
 
-            try {
-                const team = await TeamsController.getFullTeamForUser(teamId, user);
-                res.status(200).json({ team });
-            } catch (error) {
-                res.status(403).send(error.message)
-            }
+
+            const team = await TeamsController.getFullTeamForUser(teamId, user);
+            res.status(200).json({ team });
         })
     .patch(validate([
         body("name").isString().withMessage("Name is required"),
