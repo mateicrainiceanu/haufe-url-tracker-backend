@@ -14,6 +14,7 @@ import userRouter from './routes/users/userRoutes';
 import redirectRoutes from './routes/redirect/redirectRoutes';
 import trackerRoutes from './routes/tracker/trackerRoutes';
 import rootRouter from './routes/redirect/destinationRedirectRoute';
+import handleErrors from './utils/middleware/errorHandler';
 
 const app = express();
 const port = 3000;
@@ -33,6 +34,7 @@ app.use("/api/v1/", redirectRoutes);
 app.use("/api/v1/", trackerRoutes);
 app.use("/api/v1/", auth, teamRoutes);
 
+app.use(handleErrors);
 
 app.listen(port, async () => {
 

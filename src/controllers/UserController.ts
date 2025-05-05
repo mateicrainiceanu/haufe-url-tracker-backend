@@ -1,5 +1,6 @@
 import logger from "../config/logger";
 import UserService from "../services/UserServices";
+import CustomError from "../utils/CustomError";
 import { matchesHash } from "../utils/hash";
 
 class UserController {
@@ -22,12 +23,8 @@ class UserController {
     static async authenticateUser(email, password) {
         const user = await UserService.getByEmail(email);
 
-        if (user === null) {
-            throw Error("No user with this email was found!");
-        }
-
-        if (!await matchesHash(password, user.hash)) {
-            throw Error("Passwords do not match!");
+        if (user === null || !await matchesHash(password, user.hash)) {
+            throw new CustomError(400, "Invalid credentials");
         }
 
         delete user.hash;

@@ -2,7 +2,6 @@ import { hashPassword } from "../utils/hash";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
 import { jwtsecret } from "../config/global";
-import Team from "../models/Team";
 import { Op } from "sequelize";
 import logger from "../config/logger";
 
@@ -40,6 +39,7 @@ export default class UserService {
                 }
             },
             limit: 5,
+            attributes: ["id", "email"]
         });
     }
 }

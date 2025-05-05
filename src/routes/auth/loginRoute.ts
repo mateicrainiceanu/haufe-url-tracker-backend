@@ -12,14 +12,9 @@ router.post("/login", validate([
 ]), async (req, res) => {
     const { email, password }: { email?: string, password?: string } = req.body || {};
 
-    try {
-        const { user, token } = await UserController.authenticateUser(email, password);
-        logger.info(`User [${user.id}] authenticated`);
-        res.status(200).json({ user, token });
-    } catch (error) {
-        logger.error(`Error authenticating user [${email}]: ${error.message}`);
-        res.status(400).send("Invalid credentials");
-    }
+    const { user, token } = await UserController.authenticateUser(email, password);
+    logger.info(`User [${user.id}] authenticated`);
+    res.status(200).json({ user, token });
 
 })
 
