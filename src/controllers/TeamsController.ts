@@ -3,6 +3,7 @@ import Team from "../models/Team";
 import User from "../models/User";
 import { TeamService } from "../services/TeamService";
 import UserService from "../services/UserServices";
+import CustomError from "../utils/CustomError";
 
 export default class TeamsController {
     static async createTeam(user: User, teamName?: string) {
@@ -21,7 +22,7 @@ export default class TeamsController {
 
         if (!TeamService.userHasPermissionsOnTeam(user, team)) {
             logger.warn(`User [${user.id}] tried to access team [${teamId}]`);
-            throw new Error("User has no access to this team");
+            throw new CustomError(401, "User has no access to this team");
         }
 
         return team;
@@ -31,7 +32,7 @@ export default class TeamsController {
         const team = await this.getFullTeamForUser(teamId, user);
 
         if (name) {
-            TeamService.updateTeamName(user, team, name);
+            await TeamService.updateTeamName(user, team, name);
             logger.info(`Team [${teamId}] updated`);
         }
 
@@ -42,7 +43,7 @@ export default class TeamsController {
         const team = await TeamService.getFullTeam(teamId);
 
         if (!TeamService.isUserOwnerOfTeam(user, team)) {
-            throw new Error("Only owners can delete teams");
+            throw new CustomError(401, "Only owners can delete teams");
         }
 
         TeamService.deleteTeam(team);
@@ -54,17 +55,17 @@ export default class TeamsController {
         const team = await TeamService.getFullTeam(teamId);
 
         if (!TeamService.isUserOwnerOfTeam(user, team)) {
-            throw new Error("Only owners can add users to teams");
+            throw new CustomError(401, "Only owners can add users to teams");
         }
 
         const userToAdd = await User.findByPk(userId);
 
         if (!userToAdd) {
-            throw new Error("User not found");
+            throw new CustomError(404, "User not found");
         }
 
         if (TeamService.userHasPermissionsOnTeam(userToAdd, team)) {
-            throw new Error("User already has access to this team");
+            throw new CustomError(404, "User already has access to this team");
         }
 
         await TeamService.addUserToTeam(userToAdd, team);
@@ -84,11 +85,11 @@ export default class TeamsController {
         const userToRemove = await User.findByPk(userId);
 
         if (!userToRemove) {
-            throw new Error("User not found");
+            throw new CustomError(404, "User not found");
         }
 
         if (!TeamService.userHasPermissionsOnTeam(userToRemove, team)) {
-            throw new Error("User does not have access to this team");
+            throw new CustomError(401, "User does not have access to this team");
         }
 
         await TeamService.removeUserFromTeam(userToRemove, team);

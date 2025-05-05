@@ -3,6 +3,7 @@ import User from "../models/User";
 import RedirectService from "../services/RedirectService";
 import { TeamService } from "../services/TeamService";
 import { TrackerService } from "../services/TrackerService";
+import CustomError from "../utils/CustomError";
 import TeamsController from "./TeamsController";
 
 export default class RedirectController {
@@ -11,7 +12,7 @@ export default class RedirectController {
         const redirect = await RedirectService.getRedirectByKeyword(keyword);
         if (!redirect) {
             logger.error(`Redirect with keyword [${keyword}] not found`);
-            throw new Error("Redirect not found");
+            throw new CustomError(404, "Redirect not found");
         }
         return redirect;
     }   
@@ -26,7 +27,7 @@ export default class RedirectController {
     ) {
         const kw = keyword || RedirectService.generateKeyword();
         if (!dest) {
-            throw new Error("Destination URL is required");
+            throw new CustomError(400, "Destination URL is requrired");
         }
         if (!user) {
             return { redirect: await RedirectService.createKeywordRedirect(dest, kw) };
@@ -36,17 +37,15 @@ export default class RedirectController {
 
             if (!team) {
                 logger.error(`Team with ID [${teamId}] not found`);
-                throw new Error("Team was not found");
+                throw new CustomError(404, "Team was not found");
             }
 
             const redirect = await RedirectService.createKeywordRedirect(dest, kw);
 
             if (!redirect) {
                 logger.error(`Failed to create redirect. Destination: ${dest}, Keyword: ${kw}, Team ID: ${teamId}, User ID: ${user.id}`);
-                throw new Error("Failed to create redirect");
+                throw new CustomError(500, "Failed to create redirect");
             }
-
-            logger.info("Name" + name)
 
             const tracker = await TrackerService.createForRedirect(redirect, name, description);
 
