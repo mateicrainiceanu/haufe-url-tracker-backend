@@ -12,9 +12,6 @@ if (!fs.existsSync(logDirectory)) {
 if (!fs.existsSync(destinationLogFile)) {
     fs.writeFileSync(destinationLogFile, '', { flag: 'w' });
 }
-const stream = fs.createWriteStream(destinationLogFile, { flags: 'a' });
-
-stream.close();
 
 const targets: any[] = [ {
     level: logLevel,

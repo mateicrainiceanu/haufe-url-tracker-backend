@@ -2,6 +2,8 @@
 .env.dev
 .env.local
 
+.idea/
+
 .DS_Store
 
 node_modules/
