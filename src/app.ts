@@ -3,7 +3,6 @@ import express from 'express';
 import registerRoute from './routes/auth/registerRoute';
 import bodyParser from 'body-parser';
 import loginRoute from './routes/auth/loginRoute';
-import User from './models/User';
 import db, { testSequelize } from './config/db';
 import cors from 'cors';
 import auth from './utils/middleware/auth';
@@ -15,6 +14,7 @@ import redirectRoutes from './routes/redirect/redirectRoutes';
 import trackerRoutes from './routes/tracker/trackerRoutes';
 import rootRouter from './routes/redirect/destinationRedirectRoute';
 import handleErrors from './utils/middleware/errorHandler';
+import { requestLogger } from './utils/middleware/requestLogger';
 
 const app = express();
 const port = 3000;
@@ -24,7 +24,9 @@ app.use(cors());
 
 app.use(rootRouter);
 
-app.get('/api/v1/status', async (req, res) => {
+app.use(requestLogger);
+
+app.get('/api/v1/status', async (_, res) => {
   res.status(200).json({ status: 'ok', code: 3 });
 });
 

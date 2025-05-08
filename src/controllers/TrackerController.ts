@@ -1,8 +1,7 @@
-
 import Team from "../models/Team";
 import User from "../models/User";
 import RedirectService from "../services/RedirectService";
-import { TrackerService } from "../services/TrackerService";
+import {TrackerService} from "../services/TrackerService";
 import CustomError from "../utils/CustomError";
 
 export default class TrackerController {
@@ -10,8 +9,8 @@ export default class TrackerController {
         return await TrackerService.getTrackersForTeam(team);
     }
 
-    static async updateTracker(trackerId: string, user: User, team: Team, name: string, description?: string) {
-        const newdesc = description || "";
+    static async updateTracker(trackerId: string, user: User, name: string, description?: string) {
+        const newdesc = description || null;
 
         if (!name) {
             throw new CustomError(400, "A name is required");
