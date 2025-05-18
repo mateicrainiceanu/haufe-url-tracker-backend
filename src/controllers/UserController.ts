@@ -1,7 +1,8 @@
 import logger from "../config/logger";
 import UserService from "../services/UserServices";
 import CustomError from "../utils/CustomError";
-import { matchesHash } from "../utils/hash";
+import {matchesHash} from "../utils/hash";
+import User from "../models/User";
 
 class UserController {
 
@@ -10,14 +11,18 @@ class UserController {
         return foundUser !== null;
     }
 
+    static signToken(user: User) {
+        return UserService.tokenize(user);
+    }
+
     static async registerUser(email, password) {
         const user = await UserService.createUser(email, password);
 
-        const token = await UserService.tokenize(user);
+        const token = UserService.tokenize(user);
 
         logger.info(`User created [${user.id}]`);
 
-        return { user, token }
+        return {user, token}
     }
 
     static async authenticateUser(email, password) {
@@ -31,11 +36,23 @@ class UserController {
 
         const token = UserService.tokenize(user);
 
-        return { user, token }
+        return {user, token}
     }
 
     static async queryByEmail(email: string) {
         return UserService.findUsersByPartialEmail(email);
+    }
+
+    static async getForGProfile(profile) {
+        const email = profile.emails[0].value
+        const user = await UserService.getByEmail(email);
+
+        if (!user) {
+            const created = UserService.createUser(email, profile.id + Date.now());
+            return created;
+        } else {
+            return user;
+        }
     }
 }
 

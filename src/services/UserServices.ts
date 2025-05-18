@@ -1,8 +1,8 @@
-import { hashPassword } from "../utils/hash";
+import {hashPassword} from "../utils/hash";
 import User from "../models/User";
 import jwt from "jsonwebtoken";
-import { jwtsecret } from "../config/global";
-import { Op } from "sequelize";
+import {jwtsecret} from "../config/global";
+import {Op} from "sequelize";
 import logger from "../config/logger";
 
 export default class UserService {
@@ -10,17 +10,24 @@ export default class UserService {
     static async createUser(email, password) {
         logger.trace("UserService.createUser");
         const hash = await hashPassword(password);
-        return User.create({ email, hash });
+        return User.create({email, hash});
+    }
+
+    static async findById(userId) {
+        logger.trace("UserService.findById");
+
+        const user = await UserService.findById(userId);
+        return user;
     }
 
     static getByEmail(email) {
         logger.trace("UserService.getByEmail");
-        return User.findOne({ where: { email } });
+        return User.findOne({where: {email}});
     }
 
     static tokenize(user: User) {
         logger.trace("UserService.tokenize");
-        const payload = user.get({ plain: true });
+        const payload = user.get({plain: true});
         delete payload.hash;
         return jwt.sign(payload, jwtsecret);
     }
