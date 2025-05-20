@@ -20,9 +20,14 @@ configDevRoutes.post('/api-key', auth, team,
     });
 
 configDevRoutes.get("/api-keys/:teamId", auth, team, (req, res) => {
-        const {team} = req;
-
+        // const {team} = req;
+        res.send("Not implemented")
     }
-)
+);
+
+configDevRoutes.delete("/api-key/:keyId", auth, async (req, res) => {
+    await DevKeysController.deleteDevKey(req.params.keyId, req.user);
+    res.status(200).send("DevKey was deleted successfully");
+});
 
 export default configDevRoutes;

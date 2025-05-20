@@ -1,9 +1,11 @@
 import {DataTypes, Model} from "sequelize";
 import db from "../config/db";
+import Team from "./Team";
 
 class DevKey extends Model {
     id: string;
     teamId: string;
+    team: Team;
 
     getApiKey() {
         return this.id;

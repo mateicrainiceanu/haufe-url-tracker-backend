@@ -5,7 +5,6 @@ import bodyParser from 'body-parser';
 import loginRoute from './routes/auth/loginRoute';
 import db, {testSequelize} from './config/db';
 import cors from 'cors';
-import auth from './utils/middleware/auth';
 import logger from './config/logger';
 import {initAssociations} from './models/associations';
 import teamRoutes from './routes/team/teamRoutes';
@@ -33,12 +32,16 @@ app.get('/api/v1/status', async (_, res) => {
 
 app.use(rootRouter);
 app.use(googleAuthRoutes);
-app.use("/api/v1/", registerRoute, loginRoute, userDataRoute);
-app.use("/api/v1/", userRouter)
-app.use("/api/v1/", redirectRoutes);
-app.use("/api/v1/", trackerRoutes);
-app.use("/api/v1/", devRoutes);
-app.use("/api/v1/", auth, teamRoutes);
+app.use("/api/v1/",
+    registerRoute,
+    loginRoute,
+    userDataRoute,
+    userRouter,
+    redirectRoutes,
+    trackerRoutes,
+    devRoutes,
+    teamRoutes
+);
 
 app.use(handleErrors);
 
