@@ -1,7 +1,7 @@
 import logger from "../../config/logger";
 import TeamsController from "../../controllers/TeamsController";
 import Team from "../../models/Team";
-import { AuthenticatedRequest } from "./auth";
+import {AuthenticatedRequest} from "./auth";
 import {validate as isUUID} from "uuid";
 
 export interface AuthUserTeamRequest extends AuthenticatedRequest {
@@ -9,9 +9,9 @@ export interface AuthUserTeamRequest extends AuthenticatedRequest {
 }
 
 export default async function team(req, res, next) {
-    const teamId = req.query.teamId;
-    
-    if(!teamId && !isUUID(teamId)) {
+    const teamId = req.query.teamId || req.body.teamId;
+
+    if (!teamId && !isUUID(teamId)) {
         logger.error(`No team id or invalid teamId [${teamId || ""}] passed as param`);
         res.status(400).send("A team id must be passed as param");
         return;

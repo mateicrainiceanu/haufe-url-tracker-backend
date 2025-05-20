@@ -1,8 +1,7 @@
-
-import { NextFunction, Request, Response } from 'express';
+import {NextFunction, Request, Response} from 'express';
 
 import RedirectController from '../../controllers/RedirectController';
-import { AuthenticatedRequest } from '../../utils/middleware/auth';
+import {AuthenticatedRequest} from '../../utils/middleware/auth';
 
 export function requestHandler(req: Request, res: Response, next: NextFunction) {
     const token = req.get('authorization');
@@ -15,10 +14,9 @@ export function requestHandler(req: Request, res: Response, next: NextFunction) 
 }
 
 async function unauthCreateRedirect(req: Request, res: Response) {
-    const { url, keyword } = req.body;
+    const {url, keyword} = req.body;
 
     try {
-
         const response = await RedirectController.createRedirect(url, keyword);
         res.status(201).json(response);
 
@@ -34,7 +32,7 @@ async function unauthCreateRedirect(req: Request, res: Response) {
 }
 
 export async function createAuthRequest(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-    const { url, keyword, teamId} = req.body;
+    const {url, keyword, teamId} = req.body;
 
     if (!teamId) {
         const redirect = await RedirectController.createRedirect(url, keyword);

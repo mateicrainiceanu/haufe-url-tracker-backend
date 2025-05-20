@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { decodeToken } from '../decodeToken';
+import {Request} from 'express';
+import {decodeToken} from '../decodeToken';
 import logger from '../../config/logger';
 import User from '../../models/User';
 
@@ -9,6 +9,8 @@ export interface AuthenticatedRequest extends Request {
         [key: string]: any;
     };
     user: User;
+    token: string;
+
     [key: string]: any;
 }
 
@@ -17,7 +19,8 @@ export default async function auth(req: AuthenticatedRequest, res, next) {
     if (!token) {
         res.status(401).send('User not authenticated');
         return;
-    };
+    }
+    ;
 
     const bearerToken = token.split('Bearer ')[1];
     if (!bearerToken) {
@@ -35,7 +38,8 @@ export default async function auth(req: AuthenticatedRequest, res, next) {
             return;
         }
 
-        req.user = user
+        req.user = user;
+        req.token = bearerToken;
 
         logger.debug(`User [${req.user.id}] verified for [${req.method}] at [${req.path}]`);
         next();

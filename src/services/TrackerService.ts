@@ -4,7 +4,7 @@ import Team from "../models/Team";
 import Tracker from "../models/Tracker";
 import User from "../models/User";
 import CustomError from "../utils/CustomError";
-import { TeamService } from "./TeamService";
+import {TeamService} from "./TeamService";
 
 export class TrackerService {
 
@@ -12,9 +12,7 @@ export class TrackerService {
         logger.trace(`TrackerService.createForRedirect [${redirect.id}]`);
         const name = optName || redirect.keyword + " " + redirect.url;
         const description = optDescription || null;
-        const tracker = await Tracker.create({ name, description, redirectId: redirect.id });
-
-        return tracker;
+        return await Tracker.create({name, description, redirectId: redirect.id});
     }
 
     static getTrackersForTeam(team: Team) {
@@ -34,6 +32,35 @@ export class TrackerService {
         if (TeamService.userHasPermissionsOnTeam(user, tracker.team)) {
             return true;
         }
+    }
+
+    static async getTrackerData(trackerId: string, user: User) {
+        logger.trace(`TrackerService.getTrackerData [${trackerId}] [${user.id}]`);
+        const tracker = await this.getFullTracker(trackerId);
+
+        if (!tracker) {
+            throw new CustomError(404, "Tracker not found");
+        }
+
+        if (this.checkTrackerOwnership(tracker, user)) {
+            return tracker;
+        }
+
+        throw new CustomError(404, "User or team is not authorized to view this tracker");
+    }
+
+    static async updateTracker(tracker: Tracker, name: string, description?: string) {
+
+        logger.trace(`TrackerService.updateTracker [TID: ${tracker.id}] [NEW_NAME: ${name}] [NEW_DESC: ${description}]`);
+        logger.info(`Updating tracker [${tracker.id}] with name "${tracker.name}" -> "${name}" and description "${tracker.description}" -> "${description}"`);
+
+        const newdesc = description || "";
+        return tracker.update({name, description: newdesc});
+    }
+
+    static deleteTracker(tracker: Tracker) {
+        logger.trace(`TrackerService.deleteTracker [${tracker.id}]`);
+        return tracker.destroy();
     }
 
     private static getFullTracker(trackerId: string) {
@@ -60,35 +87,6 @@ export class TrackerService {
             ]
         });
 
-    }
-
-    static async getTrackerData(trackerId: string, user: User) {
-        logger.trace(`TrackerService.getTrackerData [${trackerId}] [${user.id}]`);
-        const tracker = await this.getFullTracker(trackerId);
-        
-        if (!tracker) {
-            throw new CustomError(404, "Tracker not found");
-        }
-
-        if (this.checkTrackerOwnership(tracker, user)) {
-            return tracker;
-        };
-
-        throw new CustomError(404, "User or team is not authorized to view this tracker");
-    }
-
-    static async updateTracker(tracker: Tracker, name: string, description?: string) {
-
-        logger.trace(`TrackerService.updateTracker [TID: ${tracker.id}] [NEW_NAME: ${name}] [NEW_DESC: ${description}]`);
-        logger.info(`Updating tracker [${tracker.id}] with name "${tracker.name}" -> "${name}" and description "${tracker.description}" -> "${description}"`);
-
-        const newdesc = description || "";
-        return tracker.update({ name, description: newdesc });
-    }
-
-    static deleteTracker(tracker: Tracker) {
-        logger.trace(`TrackerService.deleteTracker [${tracker.id}]`);
-        return tracker.destroy();
     }
 
 }

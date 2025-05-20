@@ -1,8 +1,8 @@
 import logger from "../config/logger";
 import User from "../models/User";
 import RedirectService from "../services/RedirectService";
-import { TeamService } from "../services/TeamService";
-import { TrackerService } from "../services/TrackerService";
+import {TeamService} from "../services/TeamService";
+import {TrackerService} from "../services/TrackerService";
 import CustomError from "../utils/CustomError";
 import TeamsController from "./TeamsController";
 
@@ -15,7 +15,7 @@ export default class RedirectController {
             throw new CustomError(404, "Redirect not found");
         }
         return redirect;
-    }   
+    }
 
     static async createRedirect(
         dest: string,
@@ -30,7 +30,7 @@ export default class RedirectController {
             throw new CustomError(400, "Destination URL is requrired");
         }
         if (!user) {
-            return { redirect: await RedirectService.createKeywordRedirect(dest, kw) };
+            return await RedirectService.createKeywordRedirect(dest, kw);
         }
         if (teamId && user) {
             const team = await TeamsController.getFullTeamForUser(teamId, user);
@@ -51,7 +51,10 @@ export default class RedirectController {
 
             await TeamService.addTrackerToTeam(team, tracker);
 
-            return { redirect: { ...redirect.get({ plain: true }), tracker }, tracker: { ...tracker.get({ plain: true }), redirect } };
+            return {
+                redirect: {...redirect.get({plain: true}), tracker},
+                tracker: {...tracker.get({plain: true}), redirect}
+            };
         }
     }
 }
