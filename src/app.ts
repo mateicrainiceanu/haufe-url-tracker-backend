@@ -17,6 +17,7 @@ import handleErrors from './utils/middleware/errorHandler';
 import {requestLogger} from './utils/middleware/requestLogger';
 import userDataRoute from "./routes/auth/userDataRoute";
 import googleAuthRoutes from "./routes/auth/GoogleAuthRoutes";
+import devRoutes from "./routes/dev/devRoutes";
 
 const app = express();
 const port = 3000;
@@ -24,19 +25,19 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use(rootRouter);
-
 app.use(requestLogger);
 
 app.get('/api/v1/status', async (_, res) => {
     res.status(200).json({status: 'ok', code: 3});
 });
 
+app.use(rootRouter);
 app.use(googleAuthRoutes);
 app.use("/api/v1/", registerRoute, loginRoute, userDataRoute);
 app.use("/api/v1/", userRouter)
 app.use("/api/v1/", redirectRoutes);
 app.use("/api/v1/", trackerRoutes);
+app.use("/api/v1/", devRoutes);
 app.use("/api/v1/", auth, teamRoutes);
 
 app.use(handleErrors);

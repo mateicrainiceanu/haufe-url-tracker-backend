@@ -38,9 +38,7 @@ export default async function auth(req: AuthenticatedRequest, res, next) {
             return;
         }
 
-        delete user.hash
-
-        req.user = user
+        req.user = user;
         req.token = bearerToken;
 
         logger.debug(`User [${req.user.id}] verified for [${req.method}] at [${req.path}]`);

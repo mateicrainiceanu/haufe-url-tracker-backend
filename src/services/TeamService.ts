@@ -4,13 +4,14 @@ import Tracker from "../models/Tracker";
 import User from "../models/User";
 import CustomError from "../utils/CustomError";
 import UserService from "./UserServices";
+import DevKey from "../models/DevKey";
 
 export class TeamService {
     static async createTeam(user: User, teamName?: string) {
         const name = teamName ? teamName : UserService.getUsername(user) + "'s Team"
         logger.trace("TeamService.createTeam " + teamName);
 
-        const team = await Team.create({ ownerId: user.id, name })
+        const team = await Team.create({ownerId: user.id, name})
         await team.addUser(user);
         logger.info(`Team [${team.id}] created by user [${user.id}]`);
         return team;
@@ -29,6 +30,10 @@ export class TeamService {
                     model: User,
                     as: "owner",
                     attributes: ["id", "email"]
+                },
+                {
+                    model: DevKey,
+                    as: "devKeys",
                 }
             ]
         })
@@ -57,6 +62,10 @@ export class TeamService {
                     model: User,
                     as: "owner",
                     attributes: ["id", "email"]
+                },
+                {
+                    model: DevKey,
+                    as: "devKeys",
                 }
             ]
         });
@@ -88,7 +97,6 @@ export class TeamService {
     static addUserToTeam(user: User, team: Team) {
         logger.trace(`TeamService.addUserToTeam [UID: ${user.id}] [TID: ${team.id}]`);
         return user.addTeam(team)
-
     }
 
     static removeUserFromTeam(user: User, team: Team) {
