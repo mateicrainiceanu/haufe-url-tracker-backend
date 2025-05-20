@@ -22,6 +22,10 @@ export default class DevKeyService {
                             model: User,
                             as: 'users',
                             attributes: ["email", "id"]
+                        }, {
+                            model: User,
+                            as: "owner",
+                            attributes: ["email", "id"]
                         }
                     ]
                 }

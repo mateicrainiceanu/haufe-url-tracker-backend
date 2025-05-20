@@ -1,30 +1,33 @@
 import express from "express";
-import {authDev} from "../../utils/middleware/authDev";
+import {authDev, TeamApiReq} from "../../utils/middleware/authDev";
 import validate from "../../utils/middleware/validate";
-import {param} from "express-validator";
+import {body, param} from "express-validator";
 import {validate as isValidUUID} from "uuid";
+import TrackerController from "../../controllers/TrackerController";
+import AccessController from "../../controllers/AccessController";
 
 const trackerDevRouter = express.Router({mergeParams: true});
 
-trackerDevRouter.get("/tracker/:trackerId", authDev, validate([
+trackerDevRouter.get("/tracker/:trackerId", validate([
     param("trackerId").isString().custom(isValidUUID).withMessage("Tracker id is required and must be a valid UUID")
-]), (req, res) => {
+]), authDev, async (req: TeamApiReq, res) => {
 
     const {trackerId} = req.params;
 
-    // try {
-    //     const {tracker, accessLogs} = await AccessController.getAccessDataDev(trackerId, req.t);
-    //     res.status(200).json({tracker, accessLogs});
-    // } catch (error) {
-    //     logger.error(`Failed to get tracker id [${trackerId}] - ${error.message}`);
-    //     res.status(500).send(error.message || "An error occurred");
-    // }
+    const {tracker, accessLogs} = await AccessController.getAccessDataDev(trackerId, req.apiTeam);
+    res.status(200).json({tracker, accessLogs});
+});
 
-    res.send("Hello World");
-})
+trackerDevRouter.post("/tracker", validate([
+    body("url").isURL().withMessage("A URL should be provided"),
+    param("apiKey").isString().custom(isValidUUID).withMessage("A valid api key should be provided as param")
+]), authDev, async (req: TeamApiReq, res) => {
+    const {
+        tracker,
+        redirect
+    } = await TrackerController.createTrackerForTeam(req.apiTeam, req.body.url, req.body.keyword);
 
-trackerDevRouter.post("/tracker", authDev, (req, res) => {
-    res.send("Hello World");
+    res.json({tracker: {...tracker.get({plain: true}), redirect}});
 });
 
 export default trackerDevRouter;
